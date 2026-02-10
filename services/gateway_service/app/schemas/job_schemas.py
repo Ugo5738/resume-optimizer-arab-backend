@@ -11,7 +11,7 @@ class CreateJobRequest(BaseModel):
     title: Optional[str] = None
     company: Optional[str] = None
     resume_text: str = Field(alias="resumeText")
-    job_description: str = Field(alias="jobDescription")
+    job_description: Optional[str] = Field(default=None, alias="jobDescription")
     custom_instructions: Optional[str] = Field(default=None, alias="customInstructions")
     resume_lang: str = Field(pattern="^(en|ar)$", alias="resumeLang")
     jd_lang: str = Field(pattern="^(en|ar)$", alias="jdLang")

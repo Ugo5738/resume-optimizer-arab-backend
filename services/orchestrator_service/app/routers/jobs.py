@@ -48,7 +48,7 @@ async def create_job(
     job_data = {
         "title": payload.title or "Resume Optimization",
         "company": payload.company,
-        "job_description": payload.job_description,
+        "job_description": payload.job_description or "",
         "custom_instructions": payload.custom_instructions,
         "resume_lang": payload.resume_lang,
         "jd_lang": payload.jd_lang,
@@ -62,7 +62,7 @@ async def create_job(
         "job_id": str(job.id),
         "user_id": payload.user_id,
         "resume_text": payload.resume_text,
-        "job_description": payload.job_description,
+        "job_description": payload.job_description or "",
         "instructions": payload.custom_instructions,
         "resume_lang": payload.resume_lang,
         "jd_lang": payload.jd_lang,

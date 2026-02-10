@@ -283,11 +283,45 @@ Job Description:
         # Step 1: Extract entities
         entities = await self.extract_entities(resume_text)
 
-        # Step 2: Analyze alignment
-        alignment = await self.analyze_alignment(resume_text, job_description, entities)
+        is_generic = not job_description.strip()
+
+        # Step 2: Analyze alignment (skip for generic mode)
+        if is_generic:
+            alignment = AlignmentInsights(matched=[], missing=[], weak=[], evidence=[])
+        else:
+            alignment = await self.analyze_alignment(
+                resume_text, job_description, entities
+            )
 
         # Step 3: Generate optimized resume
-        system_prompt = f"""You are an expert resume optimization assistant.
+        if is_generic:
+            system_prompt = f"""You are an expert resume review assistant.
+Review the resume for overall quality WITHOUT comparing it to a specific job description.
+Evaluate and provide ALL of the following:
+1. score: An overall quality score from 0-100 (integer, required) based on clarity, impact, formatting, completeness, and professionalism
+2. missing_keywords: Industry-standard skills or sections that are notably absent (list of strings, required - use [] if none)
+3. covered_keywords: Strong skills and keywords already present (list of strings, required - use [] if none)
+4. change_log: Specific improvements made (list of strings, required - use [] if none)
+5. preview_markdown: An improved resume in Markdown format (string, required)
+
+Focus on:
+- Professional tone and active language
+- Quantified achievements and impact metrics
+- Clear section structure (Summary, Experience, Skills, Education)
+- Concise but impactful bullet points
+- Removing filler words and vague descriptions
+
+IMPORTANT: Always include ALL 5 fields in your response. Respond in valid JSON format.
+
+{language_instructions}"""
+
+            user_prompt = f"""Resume:
+{resume_text}
+
+Additional Instructions:
+{instructions or 'None'}"""
+        else:
+            system_prompt = f"""You are an expert resume optimization assistant.
 Analyze the resume against the job description and provide ALL of the following:
 1. score: A match score from 0-100 (integer, required)
 2. missing_keywords: Keywords from JD missing in resume (list of strings, required - use [] if none)
@@ -299,7 +333,7 @@ IMPORTANT: Always include ALL 5 fields in your response. Respond in valid JSON f
 
 {language_instructions}"""
 
-        user_prompt = f"""Resume:
+            user_prompt = f"""Resume:
 {resume_text}
 
 Job Description:

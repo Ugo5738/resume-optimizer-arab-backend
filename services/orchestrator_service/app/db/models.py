@@ -111,7 +111,7 @@ class Job(Base):
     user_id: Mapped[str] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     company: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
-    job_description: Mapped[str] = mapped_column(Text, nullable=False)
+    job_description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     parsed_json: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
     custom_instructions: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     resume_lang: Mapped[str] = mapped_column(String(4), nullable=False)

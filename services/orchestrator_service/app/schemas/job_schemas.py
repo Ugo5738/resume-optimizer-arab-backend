@@ -15,7 +15,7 @@ class CreateJobRequest(BaseModel):
     title: Optional[str] = None
     company: Optional[str] = None
     resume_text: str
-    job_description: str
+    job_description: Optional[str] = None
     custom_instructions: Optional[str] = None
     resume_lang: str = Field(pattern="^(en|ar)$")
     jd_lang: str = Field(pattern="^(en|ar)$")
